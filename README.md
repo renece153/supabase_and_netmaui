@@ -108,39 +108,141 @@ left join return_totals rt on rt.inventory_id = i.id
 left join latest_activity la on la.inventory_id = i.id;
 ```
 
-While this query might sound too complex, what is does is it gives you the remaining number of inventoey you have. 
+While this query might look too complex, what is does is it gives you the remaining number of inventoey you have. 
 
 ---
 
 # 2. Stored Procedures
 ---
 
-## 2.1 Borrow Item
+Stored Procedures act like a code in the data base. We use the to communicate with the database and it does the heavy lifting in inserting records.
+
+## 2.1 Safe Borrow Stored Procedure (Prevents Over Borrowing)
 ```sql
-CREATE OR REPLACE FUNCTION borrow_item(p_inventory_id BIGINT, p_quantity INT)
-RETURNS VOID AS $$
-BEGIN
-    INSERT INTO transactions (inventory_id, quantity, transaction_type)
-    VALUES (p_inventory_id, p_quantity, 'borrow');
-END;
-$$ LANGUAGE plpgsql;
+create or replace function safe_insert_borrowed_item(
+    p_inventory_id uuid,
+    p_user_id bigint,
+    p_quantity int
+)
+returns text
+language plpgsql
+as $$
+declare
+    remaining int;
+    last_id text;
+    new_number int;
+    new_id text;
+begin
+    -- Get remaining quantity from the view
+    select remaining_quantity into remaining
+    from inventory_availability
+    where inventory_id = p_inventory_id;
+
+    if remaining is null then
+        raise exception 'Inventory item does not exist.';
+    end if;
+
+    if remaining <= 0 then
+        raise exception 'No stock available to borrow.';
+    end if;
+
+    if p_quantity > remaining then
+        raise exception 'Cannot borrow more than remaining quantity (%).', remaining;
+    end if;
+
+    -- Generate BUR-00001 ID
+    select borrow_id into last_id
+    from borrowed
+    order by borrow_id desc
+    limit 1;
+
+    if last_id is null then
+        new_number := 1;
+    else
+        new_number := (regexp_replace(last_id, '\D', '', 'g'))::int + 1;
+    end if;
+
+    new_id := 'BUR-' || lpad(new_number::text, 5, '0');
+
+    insert into borrowed (borrow_id, inventory_id, user_id, quantity)
+    values (new_id, p_inventory_id, p_user_id, p_quantity);
+
+    return new_id;
+end;
+
 ```
 
-## 2.2 Return Item
+## 2.2 Safe Return Stored Procedure (No Over Returning)
 ```sql
-CREATE OR REPLACE FUNCTION return_item(p_inventory_id BIGINT, p_quantity INT)
-RETURNS VOID AS $$
-BEGIN
-    INSERT INTO transactions (inventory_id, quantity, transaction_type)
-    VALUES (p_inventory_id, p_quantity, 'return');
-END;
-$$ LANGUAGE plpgsql;
+create or replace function safe_insert_returned_item(
+    p_borrow_id text,
+    p_inventory_id uuid,
+    p_user_id bigint,
+    p_quantity int
+)
+returns text
+language plpgsql
+as $$
+declare
+    last_id text;
+    new_number int;
+    new_id text;
+    borrowed_qty int;
+    returned_qty int;
+begin
+    -- Get total borrowed for this borrow_id
+    select quantity into borrowed_qty
+    from borrowed
+    where borrow_id = p_borrow_id;
+
+    if borrowed_qty is null then
+        raise exception 'Borrow record does not exist.';
+    end if;
+
+    -- Get total returned so far
+    select coalesce(sum(quantity), 0) into returned_qty
+    from returned
+    where borrow_id = p_borrow_id;
+
+    if returned_qty + p_quantity > borrowed_qty then
+        raise exception 'Cannot return more than borrowed.';
+    end if;
+
+    -- Generate RET-00001 ID
+    select return_id into last_id
+    from returned
+    order by return_id desc
+    limit 1;
+
+    if last_id is null then
+        new_number := 1;
+    else
+        new_number := (regexp_replace(last_id, '\D', '', 'g'))::int + 1;
+    end if;
+
+    new_id := 'RET-' || lpad(new_number::text, 5, '0');
+
+    insert into returned (return_id, borrow_id, inventory_id, user_id, quantity)
+    values (new_id, p_borrow_id, p_inventory_id, p_user_id, p_quantity);
+
+    return new_id;
+end;
+$$;
+
 ```
 
 ---
 
-# 3. .NET MAUI ViewModels
+# 3. .NET MAUI
 ---
+
+
+
+Before we proceed, we need to make 4 files for organizational purposes. Create 4 folders:
+1. 
+2.
+3.
+4.
 
 ## 3.1 AddInventoryViewModel
 ```csharp
