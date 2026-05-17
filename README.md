@@ -166,7 +166,7 @@ begin
     values (new_id, p_inventory_id, p_user_id, p_quantity);
 
     return new_id;
-end;
+end; $$
 
 ```
 
