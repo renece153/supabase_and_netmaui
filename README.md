@@ -17,6 +17,7 @@
 
 Open Supabase and execute the following SQL scripts in the SQL Editor.
 
+![SQL Editor](images/sql_editor.png)
 
 ## 1.1 Inventory Table
 ```sql
@@ -56,7 +57,7 @@ create table returned (
 All of these are called Table and they will be used to store transactions. After, that we will add a view:
 Once you created the tables, your data maodel should look something like this:
 
-
+![Data Model](images/data_model.png)
 
 ## 1.4 Inventory Availability View
 ```sql
