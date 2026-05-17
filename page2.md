@@ -5,7 +5,7 @@ Models define the shape of your data and are used by services, viewmodels, and v
 
 ## 📑 Table of Contents
 - [1. User Model](#Models)
-- [2. Stored Procedures](#2-stored-procedures)
+- [2. User Services](#Services)
 - [3. Organizing your files](#3-organizing-your-files)
 
 
