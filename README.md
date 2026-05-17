@@ -15,44 +15,99 @@
 # 1. Database Schema
 ---
 
+Open Supabase and execute the following SQL scripts in the SQL Editor.
+
+
 ## 1.1 Inventory Table
 ```sql
-CREATE TABLE inventory (
-    id BIGSERIAL PRIMARY KEY,
-    inventory_name TEXT NOT NULL,
-    max_quantity INT NOT NULL,
-    media_type TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT NOW()
+create extension if not exists pgcrypto;
+
+create table inventory (
+    id uuid primary key default gen_random_uuid(),
+    name text,
+    quantity int,
+    created_at timestamptz default now()
 );
 ```
 
-## 1.2 Transactions Table
+## 1.2 Borrowed Table
 ```sql
-CREATE TABLE transactions (
-    id BIGSERIAL PRIMARY KEY,
-    inventory_id BIGINT REFERENCES inventory(id),
-    quantity INT NOT NULL,
-    transaction_type TEXT CHECK (transaction_type IN ('borrow', 'return')),
-    created_at TIMESTAMP DEFAULT NOW()
+create table borrowed (
+    borrow_id text primary key,
+    inventory_id uuid references inventory(id) on delete cascade,
+    user_id bigint references users(id) on delete cascade,
+    transaction_date timestamptz default now(),
+    quantity int not null
 );
 ```
 
-## 1.3 Inventory Availability View
+## 1.3 Return Table
 ```sql
-CREATE VIEW inventory_availability AS
-SELECT 
-    i.id,
-    i.inventory_name,
-    i.max_quantity,
-    i.media_type,
-    i.max_quantity 
-        - COALESCE(SUM(CASE WHEN t.transaction_type = 'borrow' THEN t.quantity ELSE 0 END), 0)
-        + COALESCE(SUM(CASE WHEN t.transaction_type = 'return' THEN t.quantity ELSE 0 END), 0)
-        AS remaining_quantity
-FROM inventory i
-LEFT JOIN transactions t ON t.inventory_id = i.id
-GROUP BY i.id;
+create table returned (
+    return_id text primary key,
+    borrow_id text references borrowed(borrow_id) on delete cascade,
+    inventory_id uuid references inventory(id) on delete cascade,
+    user_id bigint references users(id) on delete cascade,
+    return_date timestamptz default now(),
+    quantity int not null
+);
 ```
+
+All of these are called Table and they will be used to store transactions. After, that we will add a view:
+Once you created the tables, your data maodel should look something like this:
+
+
+
+## 1.4 Inventory Availability View
+```sql
+create or replace view inventory_availability as
+with borrow_totals as (
+    select 
+        inventory_id,
+        coalesce(sum(quantity), 0) as total_borrowed
+    from borrowed
+    group by inventory_id
+),
+return_totals as (
+    select 
+        inventory_id,
+        coalesce(sum(quantity), 0) as total_returned
+    from returned
+    group by inventory_id
+),
+latest_activity as (
+    select 
+        inventory_id,
+        greatest(
+            coalesce(max(transaction_date), '1900-01-01'),
+            coalesce((select max(return_date) from returned r2 where r2.inventory_id = b.inventory_id), '1900-01-01')
+        ) as latest_date,
+        case 
+            when (select max(transaction_date) from borrowed b2 where b2.inventory_id = b.inventory_id) >=
+                 (select max(return_date) from returned r2 where r2.inventory_id = b.inventory_id)
+            then 'Borrowed'
+            else 'Returned'
+        end as latest_type
+    from borrowed b
+    group by inventory_id
+)
+select 
+    i.id as inventory_id,
+    i.name as inventory_name,
+    i.quantity as max_quantity,
+    (i.quantity 
+        - coalesce(bt.total_borrowed, 0) 
+        + coalesce(rt.total_returned, 0)
+    ) as remaining_quantity,
+    la.latest_date as latest_transaction_date,
+    la.latest_type as latest_transaction_type
+from inventory i
+left join borrow_totals bt on bt.inventory_id = i.id
+left join return_totals rt on rt.inventory_id = i.id
+left join latest_activity la on la.inventory_id = i.id;
+```
+
+While this query might sound too complex, what is does is it gives you the remaining number of inventoey you have. 
 
 ---
 
