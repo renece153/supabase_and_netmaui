@@ -62,6 +62,16 @@ Place all corresponding files in to the appropriate folders.
     }
 ```
 
+5. MainPage.xaml
+```xml
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:microcharts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui" // Add This
+             x:Class="Supabase_Connection.Views.MainPage"
+             Title="Main">
+
+```
+
 
 # Dashboard Models
 
