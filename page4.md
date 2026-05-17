@@ -4,10 +4,10 @@ In this section, we will create the **Dashboard Page** that will show the summar
 
 ## 📑 Table of Contents
 - [1. Set Uo](#Set-Up)
-- [2. Transaction Services](#Transaction-Services)
-- [3. Transaction View Models](#Transaction-ViewModels)
-- [4. Transaction View](#Transaction-Views)
-- [5. Navigation](#Edit-Navigation)
+- [2. Dashboard Model](#Dashboard-Models)
+- [3. Dashboard Services](#Dashboard-Services)
+- [4. Dashboard View Models](#Dashboard-ViewModels)
+- [5. Dashboard View](#Dashboard-Views)
 
 ---
 ## 📁 Folder Structure Reminder
