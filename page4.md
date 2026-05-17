@@ -36,6 +36,7 @@ Place all corresponding files in to the appropriate folders.
 
 4. Open MauiProgram.cs
 #### MauiProgram.cs
+
 ```csharp
     public static class MauiProgram
     {
