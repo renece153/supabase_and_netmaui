@@ -1161,4 +1161,4 @@ Add this to your AppShell.xml
 
 ## 🔗 Navigation
 
-[← Previous (Page 1)](page2.md) | [Next → (Page 3)](page4.md)
+[← Previous (Users)](page2.md) | [Next → (Page 3)](page4.md)
