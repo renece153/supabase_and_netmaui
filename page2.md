@@ -3,6 +3,12 @@
 In this section, we will create the **User Page** that represent the data structures used throughout the application.  
 Models define the shape of your data and are used by services, viewmodels, and views.
 
+## 📑 Table of Contents
+- [1. User Model](#Models)
+- [2. Stored Procedures](#2-stored-procedures)
+- [3. Organizing your files](#3-organizing-your-files)
+
+
 ---
 ## 📁 Folder Structure Reminder
 
