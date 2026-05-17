@@ -4,10 +4,10 @@ In this section, we will create the **Transaction Page** that represent the data
 Models define the shape of your data and are used by services, viewmodels, and views.
 
 ## 📑 Table of Contents
-- [1. User Model](#User-Models)
-- [2. User Services](#User-CRUD-Services)
-- [3. View Models](#User-ViewModels)
-- [4. View Models](#User-Views)
+- [1. Transaction Model](#Transaction-Models)
+- [2. Transaction Services](#Transaction-Services)
+- [3. Transaction View Models](#Transaction-ViewModels)
+- [4. Transaction View](#Transaction-Views)
 - [5. Navigation](#Edit-Navigation)
 
 ---
