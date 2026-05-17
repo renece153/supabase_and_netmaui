@@ -380,12 +380,162 @@ public partial class InsertUserPage : ContentPage
 
 }
 ```
+---
 
+## ModifyUserPage
 
+### ModifyUserPage.xaml
+```xml
+<Grid VerticalOptions="Center" HorizontalOptions="Center">
+    <Frame Padding="20" BackgroundColor="White" CornerRadius="15" WidthRequest="340">
+
+        <VerticalStackLayout Spacing="15">
+
+            <Label Text="Modify User"
+                   FontSize="20"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+
+            <VerticalStackLayout>
+                <Label Text="Name" FontAttributes="Bold" TextColor="Gray" />
+                <Frame BorderColor="LightGray" CornerRadius="6" Padding="0">
+                    <Entry Text="{Binding Name}" BackgroundColor="White" TextColor="Black" />
+                </Frame>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout>
+                <Label Text="Email" FontAttributes="Bold" TextColor="Gray" />
+                <Frame BorderColor="LightGray" CornerRadius="6" Padding="0">
+                    <Entry Text="{Binding Email}" BackgroundColor="White" TextColor="Black" />
+                </Frame>
+            </VerticalStackLayout>
+
+            <VerticalStackLayout>
+                <Label Text="Age" FontAttributes="Bold" TextColor="Gray" />
+                <Frame BorderColor="LightGray" CornerRadius="6" Padding="0">
+                    <Entry Text="{Binding Age}" Keyboard="Numeric" BackgroundColor="White" TextColor="Black" />
+                </Frame>
+            </VerticalStackLayout>
+
+            <Button Text="Save Changes"
+                    BackgroundColor="#4CAF50"
+                    TextColor="White"
+                    CornerRadius="8"
+                    Command="{Binding UpdateUserCommand}" />
+
+            <Button Text="Cancel"
+                    BackgroundColor="#B39DDB"
+                    TextColor="Black"
+                    CornerRadius="8"
+                    Command="{Binding CloseCommand}" />
+
+        </VerticalStackLayout>
+
+    </Frame>
+</Grid>
+```
+### ModifyUserPage.xaml.cs
+```csharp
+public partial class ModifyUserPage : ContentPage
+{
+	public ModifyUserPage()
+	{
+		InitializeComponent();
+    }
+
+    public ModifyUserPage(user user)
+    {
+        InitializeComponent();
+        BindingContext = new ModifyUserViewModel(user);
+    }
+}
+```
+---
+## UsersPage
+
+### UsersPage.xaml
+```xml
+ <ContentPage.ToolbarItems>
+     <ToolbarItem Text="Add"
+                  Order="Primary"
+                  Priority="0"
+                  Command="{Binding OpenAddUserCommand}" />
+ </ContentPage.ToolbarItems>
+ 
+ <CollectionView x:Name="UsersList"
+             ItemsSource="{Binding Users}">
+
+     <!-- HEADER ROW -->
+     <CollectionView.Header>
+         <Grid ColumnDefinitions="2*, 2*, *, *, *" Padding="8" BackgroundColor="Black" >
+             <Label Grid.Column="0" Text="Name" FontAttributes="Bold" />
+             <Label Grid.Column="1" Text="Email" FontAttributes="Bold" />
+             <Label Grid.Column="2" Text="Age" FontAttributes="Bold" />
+             <Label Grid.Column="3" Text="Modify" FontAttributes="Bold" />
+             <Label Grid.Column="4" Text="Delete" FontAttributes="Bold" />
+         </Grid>
+     </CollectionView.Header>
+
+     <!-- TABLE BODY -->
+     <CollectionView.ItemTemplate>
+         <DataTemplate>
+             <Grid ColumnDefinitions="2*, 2*, *, *, *" Padding="8">
+                 <Label Grid.Column="0" Text="{Binding name}" />
+                 <Label Grid.Column="1" Text="{Binding email}" />
+                 <Label Grid.Column="2" Text="{Binding age}" />
+                 <!-- Modify -->
+                 <Button Grid.Column="3"
+                         Text="Edit"
+                         Padding="5"
+                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenModifyUserCommand}"
+                         CommandParameter="{Binding}" />
+
+                 <!-- Delete -->
+                 <Button Grid.Column="4"
+                         Text="Delete"
+                         Padding="5"
+                         BackgroundColor="#FFCDD2"
+                         TextColor="Black"
+                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteUserCommand}"
+                         CommandParameter="{Binding}" />
+                
+             </Grid>
+         </DataTemplate>
+     </CollectionView.ItemTemplate>
+
+ </CollectionView>
+```
+### UsersPage.xaml.cs
+```csharp
+public partial class UsersPage : ContentPage
+{
+    private readonly UsersPageViewModel _viewModel;
+
+    public UsersPage()
+    {
+        InitializeComponent();
+        _viewModel = new UsersPageViewModel();
+        BindingContext = _viewModel;
+
+        BindingContextChanged += async (s, e) =>
+        {
+            await _viewModel.LoadUsers();
+        };
+    }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        await _viewModel.LoadUsers();
+    }
+}
+```
+
+---
 
 
 ---
 
 ## 🔗 Navigation
 
-[← Previous (Page 1)](page1.md) | [Next → (Page 3)](page3.md)
+[← Previous (Page 1)](README.md) | [Next → (Page 3)](page3.md)
