@@ -451,10 +451,6 @@ public partial class InsertUserPage : ContentPage
 ```csharp
 public partial class ModifyUserPage : ContentPage
 {
-	public ModifyUserPage()
-	{
-		InitializeComponent();
-    }
 
     public ModifyUserPage(user user)
     {
