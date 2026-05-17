@@ -4,10 +4,10 @@ In this section, we will create the **User Page** that represent the data struct
 Models define the shape of your data and are used by services, viewmodels, and views.
 
 ## 📑 Table of Contents
-- [1. User Model](#Models)
-- [2. User Services](#Services)
-- [3. Organizing your files](#3-organizing-your-files)
-
+- [1. User Model](#User-Models)
+- [2. User Services](#User-CRUD-Services)
+- [3. View Models](#User-ViewModels)
+- [4. View Models](#ViewModels)
 
 ---
 ## 📁 Folder Structure Reminder
@@ -24,9 +24,9 @@ Your project should now look like this:
 Place all corresponding files in to the appropriate folders.
 ---
 
-# 📁 Models
-
-## 📦 users.cs
+# User Models
+## 📁 Models
+### 📦 users.cs
 
 ```csharp
 public class user
@@ -38,9 +38,11 @@ public class user
 }
 ```
 
-# 📁 Services
+# User CRUD Services
 
-## UserCRUDServices.cs
+## 📁 Services
+
+### UserCRUDServices.cs
 
 ```csharp
 public class UserCRUDServices
@@ -90,7 +92,9 @@ public class UserCRUDServices
 ```
 ---
 
-# 📁 ViewModels
+# User ViewModels
+
+## 📁 ViewModels
 
 ## InsertUserViewModel.cs
 
@@ -300,11 +304,13 @@ public class UsersPageViewModel : INotifyPropertyChanged
 ```
 ---
 
-# 📁 Views
+# User Views
 
-## InsertUserPage
+## 📁 Views
 
-### InsertUserPage.xaml 
+### InsertUserPage
+
+#### InsertUserPage.xaml 
 
 ```xml
 <Grid VerticalOptions="Center" HorizontalOptions="Center">
@@ -373,7 +379,7 @@ public class UsersPageViewModel : INotifyPropertyChanged
     </Frame>
 </Grid>
 ```
-### InsertUserPage.xaml.cs
+#### InsertUserPage.xaml.cs
 
 ```csharp
 public partial class InsertUserPage : ContentPage
@@ -388,9 +394,9 @@ public partial class InsertUserPage : ContentPage
 ```
 ---
 
-## ModifyUserPage
+### ModifyUserPage
 
-### ModifyUserPage.xaml
+#### ModifyUserPage.xaml
 ```xml
 <Grid VerticalOptions="Center" HorizontalOptions="Center">
     <Frame Padding="20" BackgroundColor="White" CornerRadius="15" WidthRequest="340">
@@ -440,7 +446,7 @@ public partial class InsertUserPage : ContentPage
     </Frame>
 </Grid>
 ```
-### ModifyUserPage.xaml.cs
+#### ModifyUserPage.xaml.cs
 ```csharp
 public partial class ModifyUserPage : ContentPage
 {
@@ -457,9 +463,9 @@ public partial class ModifyUserPage : ContentPage
 }
 ```
 ---
-## UsersPage
+### UsersPage
 
-### UsersPage.xaml
+#### UsersPage.xaml
 ```xml
  <ContentPage.ToolbarItems>
      <ToolbarItem Text="Add"
@@ -511,7 +517,7 @@ public partial class ModifyUserPage : ContentPage
 
  </CollectionView>
 ```
-### UsersPage.xaml.cs
+#### UsersPage.xaml.cs
 ```csharp
 public partial class UsersPage : ContentPage
 {
