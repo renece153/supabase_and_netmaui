@@ -28,6 +28,23 @@ Place all corresponding files in to the appropriate folders.
 # Transaction Models
 ## 📁 Models
 
+### transaction.cs
+```csharp
+public class BorrowedItem
+{
+    public string borrow_id { get; set; }
+    public long user_id { get; set; }
+    public int quantity { get; set; }
+}
+
+public class ReturnedItem
+{
+    public string return_id { get; set; }
+    public string borrow_id { get; set; }
+
+}
+```
+
 ### InventoryAvailability.cs
 ```csharp
 public class InventoryAvailability
