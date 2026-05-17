@@ -1,151 +1,267 @@
-# Rey's Sample Works
-
-Included in this page are the links and github repositories of my personal and school projects.
-Feel free to browse.
-
-## Data Analyst Projects
----
-### Google Colab Projects
-
-***
-[Google Data Analyst - Case Study 1: How Does a Bike-Share Navigate Speedy Success?](https://colab.research.google.com/drive/1SEMoFim_BMfPKq8fyGaW6xgIcSrSSUgb#scrollTo=DagP4WgtKWPE)
-
-+ This project utilizes Python visualization and Looker for analyzing bike-share data. The dataset includes over 50 CSV files totaling more than 2GB,     initially loaded into MS SQL Server. After cleaning and transforming the data with SQL, it's extracted to Google Sheets for easy access to Google services. Python and Jupyter Notebook are then used for data visualization. Finally, Looker serves as a dashboard for further data visualization. All files can be found in the google colab.
-
-<a><img src="https://img.shields.io/badge/MS%20SQL%20SERVER-FFDE59" /></a>
-<a><img src="https://img.shields.io/badge/Python-545353" /></a>
-<a><img src="https://img.shields.io/badge/SQL-D9AA1D" /></a>
-<a><img src="https://img.shields.io/badge/Jupyter%20Notebook-7DDA58" /></a>
-<a><img src="https://img.shields.io/badge/Google%20Looker%20Studio-01013C" /></a>
-    
-
-[Compass Travel Expense](https://colab.research.google.com/drive/1NdTEyaCMcY-cBJlOcmXoGG16lMLZ7jZ4#scrollTo=8TIQuM72gZ3j)
-+ A simple analysis on the amount spent for Translink by analzing Monthly Pass and cash value loading. The data set is manually extracted from Translink and loaded in a Postgres Database. However, the RDBMS was shut down due to incuring cost.
-
-
-<a><img src="https://img.shields.io/badge/Postgres%20SQL-032DFF" /></a>
-<a><img src="https://img.shields.io/badge/Python-545353" /></a>
-<a><img src="https://img.shields.io/badge/SQL-D9AA1D" /></a>
-<a><img src="https://img.shields.io/badge/Jupyter%20Notebook-7DDA58" /></a>
-<a><img src="https://img.shields.io/badge/Google%20Looker%20Studio-01013C" /></a>
-
-
-[Kevin's Cookie Company Analysis](https://colab.research.google.com/drive/1W6-spAtcNJy696cccBwSKEufbPxDUOM6)
-
-+ A fictious cookie company wants to analyze their current data. This is an indepth analysis of the data set using Python and Jupyter Notebook.
-
-<a><img src="https://img.shields.io/badge/Python-545353" /></a>
-<a><img src="https://img.shields.io/badge/Jupyter%20Notebook-7DDA58" /></a>
+# 📘 Supabase SQL + .NET MAUI Integration Guide  
+*A complete reference for the Inventory + Borrow/Return System*
 
 ---
 
-### Other Data Analytics Projects
-
-***
-[MMDA Traffic Analysis](https://reytorremis.github.io/rey_sample_works/mmda_dash/)
-
-+ This project uses Tableau and SQL for analyzing traffic behaviour in the Philippines. Cleaning is done using MS SQL Server. SQL is the programming language for analyzing the data.
-
-<a><img src="https://img.shields.io/badge/MS%20SQL%20SERVER-FFDE59" /></a>
-<a><img src="https://img.shields.io/badge/SQL-D9AA1D" /></a>
-<a><img src="https://img.shields.io/badge/Tableau%20Public-05058E" /></a>
-
-[Filipino Migration](https://reytorremis.github.io/rey_sample_works/filipino_migration_analysis)
-
-+ This project uses Tableau and SQL for analyzing the Filipino Migration.  Cleaning is done using MS SQL Server and unpivotting the data. Analysis is done in Excel. A presentation deck shows how the analysis is done.
-
-
-<a><img src="https://img.shields.io/badge/MS%20SQL%20SERVER-FFDE59" /></a>
-<a><img src="https://img.shields.io/badge/Excel%20and%20Spreadsheets-058E43" /></a>
-<a><img src="https://img.shields.io/badge/Powerpoint%20Presentation-E96D07" /></a>
-<a><img src="https://img.shields.io/badge/SQL-D9AA1D" /></a>
-<a><img src="https://img.shields.io/badge/Tableau%20Public-05058E" /></a>
-
-[Kevin's Cookie Company Analysis](https://reytorremis.github.io/rey_sample_works/kevin_cookie/)
-
-+ A fictious cookie company wants to analyze their current data. This is demonstration of the presenting the data, visualizing it through PowerBI and analyzing it in excel.
-
-<a><img src="https://img.shields.io/badge/PowerBI-FFDE59" /></a>
-<a><img src="https://img.shields.io/badge/Excel%20and%20Spreadsheets-058E43" /></a>
-
-[PowerBI Projects](https://reytorremis.github.io/rey_sample_works/powerBI_projects/)
-
-+ A collection of PowerBI Projects
-
-<a><img src="https://img.shields.io/badge/PowerBI-FFDE59" /></a>
+## 📑 Table of Contents
+- [1. Database Schema](#1-database-schema)
+- [2. Stored Procedures](#2-stored-procedures)
+- [3. .NET MAUI ViewModels](#3-net-maui-viewmodels)
+- [4. Borrow Page UI](#4-borrow-page-ui)
+- [5. Picker With Right‑Side Arrow](#5-picker-with-right-side-arrow)
 
 ---
 
-### Software Development and Programming Projects 
+# 1. Database Schema
+---
 
-***
-[Telegram Bot](https://reytorremis.github.io/rey_sample_works/telegrambot/)
+## 1.1 Inventory Table
+```sql
+CREATE TABLE inventory (
+    id BIGSERIAL PRIMARY KEY,
+    inventory_name TEXT NOT NULL,
+    max_quantity INT NOT NULL,
+    media_type TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
 
-+ The Python code is hosted on an AWS EC2 instance, enabling interaction with a MySQL database. It also interfaces with a Telegram Bot and utilizes the Twilio and Mailgun APIs for sending text messages and emails, respectively. Similar to the first project, the server was disabled, but documentation and demonstration remain accessible.
+## 1.2 Transactions Table
+```sql
+CREATE TABLE transactions (
+    id BIGSERIAL PRIMARY KEY,
+    inventory_id BIGINT REFERENCES inventory(id),
+    quantity INT NOT NULL,
+    transaction_type TEXT CHECK (transaction_type IN ('borrow', 'return')),
+    created_at TIMESTAMP DEFAULT NOW()
+);
+```
 
-
-<a><img src="https://img.shields.io/badge/Python-545353" /></a>
-<a><img src="https://img.shields.io/badge/Amazon%20Web%20Services-F50202" /></a>
-<a><img src="https://img.shields.io/badge/MySQL-40A9B9" /></a>
-<a><img src="https://img.shields.io/badge/SQL-D9AA1D" /></a>
-<a><img src="https://img.shields.io/badge/Telegram-1B8EE1" /></a>
-
-[Goldbach's Conjecture](https://colab.research.google.com/drive/1m8KwEv2cmQvE6SBJu-qUyoN0dJLreADe)
-    
-+ Mathematical approach in solving Golbach's Conjecture. Used python to solve the problem.
-
-<a><img src="https://img.shields.io/badge/Python-545353" /></a>
-<a><img src="https://img.shields.io/badge/Jupyter%20Notebook-7DDA58" /></a>
-
-[Online Calculator](https://reytorremis.github.io/rey_sample_works/online_calculator/)
-    
-+ A simple online calculator
-
-<a><img src="https://img.shields.io/badge/Javascript-0B7C84" /></a>
-<a><img src="https://img.shields.io/badge/HTML-B68565" /></a>
-<a><img src="https://img.shields.io/badge/CSS-91A3C1" /></a>
-
-[Cheque Writer](https://reytorremis.github.io/rey_sample_works/cheque_generator/)
-    
-+ A check writer coded in excel and VBA.
-
-<a><img src="https://img.shields.io/badge/Excel%20and%20Spreadsheets-058E43" /></a>
-
-[Health Information Management System](https://reytorremis.github.io/rey_sample_works/health_information_systems/)
-    
-+ AWS Lambda programmed using python uses multiple API points. It connects with MS SQL Server and triggers stored procedures. Front-end for this project is a mobile app that accesses API end points. Server was shut down due to incurring costs.
-
-<a><img src="https://img.shields.io/badge/Amazon%20Web%20Services-F50202" /></a>
-<a><img src="https://img.shields.io/badge/Python-545353" /></a>
-<a><img src="https://img.shields.io/badge/MS%20SQL%20SERVER-FFDE59" /></a>
-<a><img src="https://img.shields.io/badge/SQL-D9AA1D" /></a>
+## 1.3 Inventory Availability View
+```sql
+CREATE VIEW inventory_availability AS
+SELECT 
+    i.id,
+    i.inventory_name,
+    i.max_quantity,
+    i.media_type,
+    i.max_quantity 
+        - COALESCE(SUM(CASE WHEN t.transaction_type = 'borrow' THEN t.quantity ELSE 0 END), 0)
+        + COALESCE(SUM(CASE WHEN t.transaction_type = 'return' THEN t.quantity ELSE 0 END), 0)
+        AS remaining_quantity
+FROM inventory i
+LEFT JOIN transactions t ON t.inventory_id = i.id
+GROUP BY i.id;
+```
 
 ---
-### Capstone Projects
 
-***
+# 2. Stored Procedures
+---
 
-[Management Information System for Database Monitoring](https://reytorremis.github.io/rey_sample_works/db_ims/)
+## 2.1 Borrow Item
+```sql
+CREATE OR REPLACE FUNCTION borrow_item(p_inventory_id BIGINT, p_quantity INT)
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO transactions (inventory_id, quantity, transaction_type)
+    VALUES (p_inventory_id, p_quantity, 'borrow');
+END;
+$$ LANGUAGE plpgsql;
+```
 
-+ Modify and retrofit inventory management systems to function with relational database systems through a web interface designed for operation on a Windows server (deployed via AWS). The programming languages involved include SQL, Python, JavaScript, PHP, CSS, and HTML. Regrettably, the system was deactivated due to accumulating expenses. However, all documentation remains accessible below.
+## 2.2 Return Item
+```sql
+CREATE OR REPLACE FUNCTION return_item(p_inventory_id BIGINT, p_quantity INT)
+RETURNS VOID AS $$
+BEGIN
+    INSERT INTO transactions (inventory_id, quantity, transaction_type)
+    VALUES (p_inventory_id, p_quantity, 'return');
+END;
+$$ LANGUAGE plpgsql;
+```
 
-<a><img src="https://img.shields.io/badge/Javascript-0B7C84" /></a>
-<a><img src="https://img.shields.io/badge/HTML-B68565" /></a>
-<a><img src="https://img.shields.io/badge/CSS-91A3C1" /></a>
-<a><img src="https://img.shields.io/badge/Python-545353" /></a>
-<a><img src="https://img.shields.io/badge/PHP-E7DDFF" /></a>
-<a><img src="https://img.shields.io/badge/SQL-D9AA1D" /></a> 
-<a><img src="https://img.shields.io/badge/Amazon%20Web%20Services-F50202" /></a>
-<a><img src="https://img.shields.io/badge/MS%20SQL%20SERVER-FFDE59" /></a>
-<a><img src="https://img.shields.io/badge/Postgres%20SQL-032DFF" /></a>
-<a><img src="https://img.shields.io/badge/MySQL-40A9B9" /></a>
+---
 
-[Data Analysis on Education for Covid: Were online classes Successful?](https://reytorremis.github.io/rey_sample_works/sparta._data_analyst/)
+# 3. .NET MAUI ViewModels
+---
 
-+ An in-depth analysis on Covid's impact in Philippine Education. Using statistical models, quantitative and qualitative analysis and data visualization, this study explores 1) deterioration of mental health and its adverse effect in online education and 2) the social and economical factors that hindred online education.
+## 3.1 AddInventoryViewModel
+```csharp
+public class AddInventoryViewModel : INotifyPropertyChanged
+{
+    private readonly InventoryService _service;
 
-<a><img src="https://img.shields.io/badge/Excel%20and%20Spreadsheets-058E43" /></a>
-<a><img src="https://img.shields.io/badge/Google%20Looker%20Studio-01013C" /></a>
-<a><img src="https://img.shields.io/badge/Research-AC8754" /></a>
+    private string _inventoryName;
+    private int _maxQuantity;
+    private string _selectedMediaType;
 
-___
+    public string InventoryName
+    {
+        get => _inventoryName;
+        set { _inventoryName = value; OnPropertyChanged(nameof(InventoryName)); }
+    }
+
+    public int MaxQuantity
+    {
+        get => _maxQuantity;
+        set { _maxQuantity = value; OnPropertyChanged(nameof(MaxQuantity)); }
+    }
+
+    public string SelectedMediaType
+    {
+        get => _selectedMediaType;
+        set { _selectedMediaType = value; OnPropertyChanged(nameof(SelectedMediaType)); }
+    }
+
+    public ObservableCollection<string> MediaTypes { get; set; }
+
+    public Command AddCommand { get; }
+    public Command CloseCommand { get; }
+
+    public AddInventoryViewModel()
+    {
+        _service = new InventoryService();
+
+        MediaTypes = new ObservableCollection<string>
+        {
+            "Book", "DVD", "CD", "Game", "Other"
+        };
+
+        AddCommand = new Command(async () => await AddInventory());
+        CloseCommand = new Command(async () => await Close());
+    }
+
+    private async Task AddInventory()
+    {
+        await _service.AddInventoryAsync(InventoryName, MaxQuantity, SelectedMediaType);
+        await Application.Current.MainPage.Navigation.PopModalAsync();
+    }
+
+    private async Task Close() =>
+        await Application.Current.MainPage.Navigation.PopModalAsync();
+
+    public event PropertyChangedEventHandler PropertyChanged;
+    protected void OnPropertyChanged(string name) =>
+        PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(name));
+}
+```
+
+---
+
+## 3.2 TransactionViewModel
+```csharp
+public class TransactionViewModel : INotifyPropertyChanged
+{
+    private readonly InventoryService _service;
+
+    public ObservableCollection<InventoryAvailability> Inventory { get; set; }
+
+    public Command LoadInventoryCommand { get; }
+    public Command<InventoryAvailability> OpenBorrowCommand { get; }
+    public Command<InventoryAvailability> OpenReturnCommand { get; }
+    public Command AddInventoryCommand { get; }
+
+    public TransactionViewModel()
+    {
+        _service = new InventoryService();
+        Inventory = new ObservableCollection<InventoryAvailability>();
+
+        LoadInventoryCommand = new Command(async () => await LoadInventory());
+        OpenBorrowCommand = new Command<InventoryAvailability>(OpenBorrowPage);
+        OpenReturnCommand = new Command<InventoryAvailability>(OpenReturnPage);
+        AddInventoryCommand = new Command(async () => await OpenAddInventoryPage());
+
+        LoadInventoryCommand.Execute(null);
+    }
+
+    private async Task LoadInventory()
+    {
+        var items = await _service.GetInventoryAvailabilityAsync();
+        Inventory.Clear();
+        foreach (var item in items)
+            Inventory.Add(item);
+    }
+
+    private async void OpenBorrowPage(InventoryAvailability item)
+    {
+        var borrowPage = new BorrowPage(item);
+        await Application.Current.MainPage.Navigation.PushModalAsync(borrowPage);
+        borrowPage.Disappearing += async (s, e) => await LoadInventory();
+    }
+
+    private async void OpenReturnPage(InventoryAvailability item)
+    {
+        var returnPage = new ReturnPage(item);
+        await Application.Current.MainPage.Navigation.PushModalAsync(returnPage);
+        returnPage.Disappearing += async (s, e) => await LoadInventory();
+    }
+
+    private async Task OpenAddInventoryPage()
+    {
+        var addPage = new AddInventoryPage();
+        await Application.Current.MainPage.Navigation.PushModalAsync(addPage);
+        addPage.Disappearing += async (s, e) => await LoadInventory();
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+}
+```
+
+---
+
+# 4. Borrow Page UI
+---
+
+```xml
+<Grid ColumnDefinitions="*, *" ColumnSpacing="10" VerticalOptions="Center">
+    <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+        <Label Text="Remaining" TextColor="Gray" HorizontalOptions="Center" />
+        <Frame BorderColor="LightGray" CornerRadius="6" Padding="0"
+               HeightRequest="40" WidthRequest="100" BackgroundColor="White">
+            <Label Text="{Binding SelectedItem.remaining_quantity}"
+                   FontAttributes="Bold" TextColor="Green"
+                   HorizontalOptions="Center" VerticalOptions="Center" />
+        </Frame>
+    </VerticalStackLayout>
+
+    <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+        <Label Text="Borrowing" TextColor="Gray" HorizontalOptions="Center" />
+        <Frame BorderColor="LightGray" CornerRadius="6" Padding="0"
+               HeightRequest="40" WidthRequest="100" BackgroundColor="White">
+            <Entry Placeholder="Enter quantity" Keyboard="Numeric"
+                   BackgroundColor="Transparent" TextColor="Black"
+                   HorizontalOptions="Center" VerticalOptions="Center"
+                   Text="{Binding Quantity}" />
+        </Frame>
+    </VerticalStackLayout>
+</Grid>
+```
+
+---
+
+# 5. Picker With Right‑Side Arrow
+---
+
+```xml
+<Border Stroke="#B0B0B0" StrokeThickness="1" Background="White"
+        HeightRequest="38" StrokeShape="RoundRectangle 6">
+    <Grid ColumnDefinitions="*, Auto" VerticalOptions="Center">
+        <Picker x:Name="MediaPicker"
+                ItemsSource="{Binding MediaTypes}"
+                SelectedItem="{Binding SelectedMediaType}"
+                Background="Transparent"
+                TextColor="Black"
+                Margin="8,0" />
+
+        <Path Data="M 0 0 L 10 0 L 5 6 Z"
+              Fill="White"
+              WidthRequest="12"
+              HeightRequest="12"
+              VerticalOptions="Center"
+              Margin="0,0,10,0"
+              Grid.Column="1"
+              InputTransparent="True" />
+    </Grid>
+</Border>
+```
