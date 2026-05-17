@@ -277,7 +277,7 @@ public class InventoryService
 ```
 ---
 
-# User ViewModels
+# Transaction ViewModels
 
 ## 📁 ViewModels
 
@@ -748,9 +748,9 @@ public class ReturnPageViewModel : INotifyPropertyChanged
 
 ## 📁 Views
 
-### InsertUserPage
+### AddInventoryPage
 
-#### InsertUserPage.xaml 
+#### AddInventoryPage.xaml 
 
 ```xml
 <Grid VerticalOptions="Center" HorizontalOptions="Center">
@@ -761,52 +761,97 @@ public class ReturnPageViewModel : INotifyPropertyChanged
 
         <VerticalStackLayout Spacing="15">
 
-            <Label Text="Add User"
+            <Label Text="Add Inventory Item"
                    FontSize="20"
                    TextColor="Black"
                    FontAttributes="Bold"
                    HorizontalOptions="Center" />
 
-            <!-- Name -->
-            <VerticalStackLayout>
-                <Label Text="Name" FontAttributes="Bold" TextColor="Gray" />
-                <Frame BorderColor="LightGray" CornerRadius="6" Padding="0">
+            <Grid ColumnDefinitions="2*, Auto" ColumnSpacing="10">
+                <VerticalStackLayout Grid.Column="0">
+                    <Label Text="Inventory Name"
+                           FontAttributes="Bold"
+                           TextColor="Gray" />
+                    
+                    <Frame BorderColor="LightGray"
+                       CornerRadius="6"
+                       Padding="0">
                     <Entry Placeholder="Enter name"
-                           Text="{Binding Name}"
+                           TextColor="Black"
                            BackgroundColor="White" 
-                           TextColor="Black" />
-                </Frame>
-            </VerticalStackLayout>
+                           Text="{Binding InventoryName}" />
+                    </Frame>
+                </VerticalStackLayout>
 
-            <!-- Email -->
-            <VerticalStackLayout>
-                <Label Text="Email" FontAttributes="Bold" TextColor="Gray" />
-                <Frame BorderColor="LightGray" CornerRadius="6" Padding="0">
-                    <Entry Placeholder="Enter email"
-                           Keyboard="Email"
-                           Text="{Binding Email}"
-                           BackgroundColor="White" 
-                           TextColor="Black" />
-                </Frame>
-            </VerticalStackLayout>
-
-            <!-- Age -->
-            <VerticalStackLayout>
-                <Label Text="Age" FontAttributes="Bold" TextColor="Gray" />
-                <Frame BorderColor="LightGray" CornerRadius="6" Padding="0">
-                    <Entry Placeholder="Enter age"
+                <VerticalStackLayout Grid.Column="1">
+                    <Label Text="Quantity"
+                           FontAttributes="Bold"
+                           TextColor="Gray" />
+                    <Frame BorderColor="LightGray"
+                       CornerRadius="6"
+                       Padding="0"
+                       WidthRequest="80">
+                        <Entry Placeholder="0"
                            Keyboard="Numeric"
-                           Text="{Binding Age}"
+                           WidthRequest="80"
+                           TextColor="Black"
                            BackgroundColor="White" 
-                           TextColor="Black" />
+                           Text="{Binding MaxQuantity}" />
+                    </Frame>
+                </VerticalStackLayout>
+            </Grid>
+
+            <VerticalStackLayout>
+                <Label Text="Media Type"
+                       FontAttributes="Bold"
+                       TextColor="Gray" 
+                       Margin="0,0,0,2" />
+                
+                <Frame BorderColor="LightGray"
+                   CornerRadius="6"
+                   Padding="0"
+                   HeightRequest="38">
+                    
+                    <Grid ColumnDefinitions="*, Auto"
+                          VerticalOptions="Center"
+                          HeightRequest="38">
+
+                        <!-- Picker must fill the entire cell -->
+                        <Picker x:Name="MediaPicker"
+                            ItemsSource="{Binding MediaTypes}"
+                            SelectedItem="{Binding SelectedMediaType}"
+                            BackgroundColor="White"
+                            TextColor="Black"
+                            Margin="6,0"
+                            FontSize="13"
+                            HeightRequest="34"
+                            HorizontalOptions="Fill"
+                            VerticalOptions="Center" />
+
+                        <Path Data="M 0 0 L 10 0 L 5 6 Z"
+                              Fill="White"
+                              WidthRequest="12"
+                              HeightRequest="12"
+                              VerticalOptions="Center"
+                              Margin="0,0,10,0"
+                              Grid.Column="1"
+                              InputTransparent="True">
+                            <!-- ⭐ Important -->
+                            <Path.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnArrowTapped" />
+                            </Path.GestureRecognizers>
+                        </Path>
+
+                    </Grid>
                 </Frame>
             </VerticalStackLayout>
 
-            <Button Text="Add User"
+
+            <Button Text="Add Item"
                     BackgroundColor="#4CAF50"
                     TextColor="White"
                     CornerRadius="8"
-                    Command="{Binding InsertUserCommand}" />
+                    Command="{Binding AddCommand}" />
 
             <Button Text="Cancel"
                     BackgroundColor="#B39DDB"
@@ -819,191 +864,301 @@ public class ReturnPageViewModel : INotifyPropertyChanged
     </Frame>
 </Grid>
 ```
-#### InsertUserPage.xaml.cs
+#### AddInventoryPage.xaml.cs
 
 ```csharp
-public partial class InsertUserPage : ContentPage
+public partial class AddInventoryPage : ContentPage
 {
-	public InsertUserPage()
+	public AddInventoryPage()
 	{
-        InitializeComponent();
-        BindingContext = new InsertUserViewModel();
+		InitializeComponent();
+        BindingContext = new AddInventoryViewModel();
     }
 
+    private void OnArrowTapped(object sender, TappedEventArgs e)
+    {
+        MediaPicker.Focus(); // Opens the dropdown
+    }
 }
 ```
 ---
 
-### ModifyUserPage
+### BorrowPage
 
-#### ModifyUserPage.xaml
+#### BorrowPage.xaml
 ```xml
 <Grid VerticalOptions="Center" HorizontalOptions="Center">
-    <Frame Padding="20" BackgroundColor="White" CornerRadius="15" WidthRequest="340">
+    <Frame Padding="20"
+           BackgroundColor="White"
+           CornerRadius="15"
+           WidthRequest="300">
 
         <VerticalStackLayout Spacing="15">
 
-            <Label Text="Modify User"
+            <Label Text="Borrow Item for"
+                   FontSize="20"
+                   TextColor="Black"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center" />
+            <Label Text="{Binding SelectedItem.inventory_name}"
+                   FontSize="18"
+                   HorizontalOptions="Center"
+                   TextColor="Gray" />
+
+            <Grid ColumnDefinitions="*, *" ColumnSpacing="10" VerticalOptions="Center">
+                <!-- Remaining -->
+                <VerticalStackLayout Grid.Column="0" HorizontalOptions="Center">
+                    <Label Text="Remaining"
+           TextColor="Gray"
+           HorizontalOptions="Center"
+           VerticalOptions="Center" />
+                    <Frame BorderColor="LightGray"
+           CornerRadius="6"
+           Padding="0"
+           HeightRequest="40"
+           WidthRequest="100"
+           BackgroundColor="White"
+           HorizontalOptions="Center"
+           VerticalOptions="Center">
+                        <Label Text="{Binding SelectedItem.remaining_quantity}"
+               FontAttributes="Bold"
+               TextColor="Green"
+               HorizontalOptions="Center"
+               VerticalOptions="Center" />
+                    </Frame>
+                </VerticalStackLayout>
+
+                <!-- Borrowing -->
+                <VerticalStackLayout Grid.Column="1" HorizontalOptions="Center">
+                    <Label Text="Borrowing"
+           TextColor="Gray"
+           HorizontalOptions="Center"
+           VerticalOptions="Center" />
+                    <Frame BorderColor="LightGray"
+           CornerRadius="6"
+           Padding="0"
+           HeightRequest="40"
+           WidthRequest="100"
+           BackgroundColor="White"
+           HorizontalOptions="Center"
+           VerticalOptions="Center">
+                        <Entry Placeholder="Enter quantity"
+               Keyboard="Numeric"
+               TextColor="Black"
+               BackgroundColor="Transparent"
+               HorizontalOptions="Center"
+               VerticalOptions="Center"
+               Text="{Binding Quantity}" />
+                    </Frame>
+                </VerticalStackLayout>
+            </Grid>
+
+            <!-- Borrower Selector -->
+            <VerticalStackLayout Spacing="5">
+                <!-- Search Bar -->
+                <SearchBar Placeholder="Search borrower"
+                   Text="{Binding SearchText}"
+                   TextColor="Gray"/>
+
+                            <!-- Filtered User List -->
+                <CollectionView ItemsSource="{Binding FilteredUsers}"
+                        SelectionMode="Single"
+                        SelectedItem="{Binding SelectedUser}"
+                        IsVisible="{Binding IsSearching}">
+                                <CollectionView.ItemTemplate>
+                                    <DataTemplate>
+                                        <Frame Padding="10" Margin="0,5" BorderColor="LightGray">
+                                            <Label Text="{Binding name}" />
+                                        </Frame>
+                                    </DataTemplate>
+                                </CollectionView.ItemTemplate>
+                            </CollectionView>
+
+                <!-- Selected User Display -->
+                            <Label Text="{Binding SelectedUser.name, StringFormat='Borrower: {0}'}"
+               TextColor="Gray"
+               HorizontalOptions="Center" />
+            </VerticalStackLayout>
+
+            <Button Text="Confirm Borrow"
+                    BackgroundColor="#4CAF50"
+                    TextColor="White"
+                    Command="{Binding ConfirmBorrowCommand}" />
+             
+
+            <Button Text="Cancel"
+                    Command="{Binding CloseCommand}" />
+
+        </VerticalStackLayout>
+
+    </Frame>
+</Grid>
+```
+#### BorrowPage.xaml.cs
+```csharp
+public partial class BorrowPage : ContentPage
+{
+    public BorrowPage(InventoryAvailability item)
+    {
+        InitializeComponent();
+        BindingContext = new BorrowPageViewModel(item);
+    }
+}
+```
+---
+### ReturnPage
+
+#### ReturnPage.xaml
+```xml
+ <Grid VerticalOptions="Center" HorizontalOptions="Center">
+    <Frame Padding="20"
+           BackgroundColor="White"
+           CornerRadius="15"
+           WidthRequest="320">
+
+        <VerticalStackLayout Spacing="15">
+
+            <Label Text="Return Item"
                    FontSize="20"
                    FontAttributes="Bold"
                    HorizontalOptions="Center" />
 
-            <VerticalStackLayout>
-                <Label Text="Name" FontAttributes="Bold" TextColor="Gray" />
-                <Frame BorderColor="LightGray" CornerRadius="6" Padding="0">
-                    <Entry Text="{Binding Name}" BackgroundColor="White" TextColor="Black" />
-                </Frame>
-            </VerticalStackLayout>
+            <!-- Search Bar -->
+            <SearchBar Placeholder="Search borrower"
+                       Text="{Binding SearchText}"
+                       TextColor="Gray"/>
 
-            <VerticalStackLayout>
-                <Label Text="Email" FontAttributes="Bold" TextColor="Gray" />
-                <Frame BorderColor="LightGray" CornerRadius="6" Padding="0">
-                    <Entry Text="{Binding Email}" BackgroundColor="White" TextColor="Black" />
-                </Frame>
-            </VerticalStackLayout>
+            <!-- Filtered Borrowed Users -->
+            <CollectionView ItemsSource="{Binding FilteredBorrowedUsers}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding SelectedBorrowedUser}"
+                            IsVisible="{Binding IsSearching}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Padding="10" Margin="0,5" BorderColor="LightGray">
+                            <VerticalStackLayout>
+                                <Label Text="{Binding user_name}" FontAttributes="Bold" />
+                                <Label Text="{Binding borrow_id}" FontSize="12" TextColor="Gray" />
+                                <Label Text="{Binding quantity, StringFormat='Qty: {0}'}" FontSize="12" TextColor="Gray" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
 
-            <VerticalStackLayout>
-                <Label Text="Age" FontAttributes="Bold" TextColor="Gray" />
-                <Frame BorderColor="LightGray" CornerRadius="6" Padding="0">
-                    <Entry Text="{Binding Age}" Keyboard="Numeric" BackgroundColor="White" TextColor="Black" />
-                </Frame>
-            </VerticalStackLayout>
+            <!-- Selected Borrow Info -->
+            <Label Text="{Binding SelectedBorrowedUser.user_name, StringFormat='Borrower: {0}'}"
+                   TextColor="Gray"
+                   HorizontalOptions="Center" />
 
-            <Button Text="Save Changes"
-                    BackgroundColor="#4CAF50"
+            <Label Text="{Binding SelectedBorrowedUser.quantity, StringFormat='Borrowed Quantity: {0}'}"
+                   FontAttributes="Bold"
+                   HorizontalOptions="Center"
+                   TextColor="Black" />
+
+            <Button Text="Confirm Return"
+                    BackgroundColor="#2196F3"
                     TextColor="White"
-                    CornerRadius="8"
-                    Command="{Binding UpdateUserCommand}" />
+                    Command="{Binding ConfirmReturnCommand}" />
 
             <Button Text="Cancel"
-                    BackgroundColor="#B39DDB"
-                    TextColor="Black"
-                    CornerRadius="8"
                     Command="{Binding CloseCommand}" />
 
         </VerticalStackLayout>
-
     </Frame>
 </Grid>
 ```
-#### ModifyUserPage.xaml.cs
+#### UsersPage.xaml.cs
 ```csharp
-public partial class ModifyUserPage : ContentPage
+public partial class ReturnPage : ContentPage
 {
-	public ModifyUserPage()
+	public ReturnPage(InventoryAvailability item)
 	{
 		InitializeComponent();
-    }
-
-    public ModifyUserPage(user user)
-    {
-        InitializeComponent();
-        BindingContext = new ModifyUserViewModel(user);
+        BindingContext = new ReturnPageViewModel(item);
     }
 }
 ```
 ---
-### UsersPage
+### TransactionPage
 
-#### UsersPage.xaml
+#### TransactionPage.xaml
 ```xml
  <ContentPage.ToolbarItems>
      <ToolbarItem Text="Add"
                   Order="Primary"
                   Priority="0"
-                  Command="{Binding OpenAddUserCommand}" />
+                  Command="{Binding AddInventoryCommand}" />
  </ContentPage.ToolbarItems>
  
- <CollectionView x:Name="UsersList"
-             ItemsSource="{Binding Users}">
-
-     <!-- HEADER ROW -->
+ <CollectionView ItemsSource="{Binding Inventory}">
      <CollectionView.Header>
-         <Grid ColumnDefinitions="2*, 2*, *, *, *" Padding="8" BackgroundColor="Black" >
-             <Label Grid.Column="0" Text="Name" FontAttributes="Bold" />
-             <Label Grid.Column="1" Text="Email" FontAttributes="Bold" />
-             <Label Grid.Column="2" Text="Age" FontAttributes="Bold" />
-             <Label Grid.Column="3" Text="Modify" FontAttributes="Bold" />
-             <Label Grid.Column="4" Text="Delete" FontAttributes="Bold" />
+         <Grid ColumnDefinitions="4*, *, *, *, *"
+           Padding="10"
+           BackgroundColor="Black">
+             <Label Grid.Column="0" Text="Inventory" FontAttributes="Bold" TextColor="White"/>
+             <Label Grid.Column="1" Text="Max" FontAttributes="Bold" TextColor="White"/>
+             <Label Grid.Column="2" Text="Remaining" FontAttributes="Bold" TextColor="White"/>
+             <Label Grid.Column="3" Text="Borrow" FontAttributes="Bold" TextColor="White"/>
+             <Label Grid.Column="4" Text="Return" FontAttributes="Bold" TextColor="White"/>
          </Grid>
      </CollectionView.Header>
 
-     <!-- TABLE BODY -->
      <CollectionView.ItemTemplate>
          <DataTemplate>
-             <Grid ColumnDefinitions="2*, 2*, *, *, *" Padding="8">
-                 <Label Grid.Column="0" Text="{Binding name}" />
-                 <Label Grid.Column="1" Text="{Binding email}" />
-                 <Label Grid.Column="2" Text="{Binding age}" />
-                 <!-- Modify -->
+             <Grid ColumnDefinitions="4*, *, *, *, *" Padding="10" BackgroundColor="#1E1E1E">
+
+                 <Label Grid.Column="0" Text="{Binding inventory_name}" TextColor="White"/>
+                 <Label Grid.Column="1" Text="{Binding max_quantity}" TextColor="White"/>
+                 <Label Grid.Column="2" Text="{Binding remaining_quantity}" TextColor="White"/>
+
                  <Button Grid.Column="3"
-                         Text="Edit"
-                         Padding="5"
-                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenModifyUserCommand}"
+                         Text="Borrow"
+                         BackgroundColor="#F44336"
+                         TextColor="White"
+                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenBorrowCommand}"
                          CommandParameter="{Binding}" />
 
-                 <!-- Delete -->
                  <Button Grid.Column="4"
-                         Text="Delete"
-                         Padding="5"
-                         BackgroundColor="#FFCDD2"
-                         TextColor="Black"
-                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.DeleteUserCommand}"
+                         Text="Return"
+                         BackgroundColor="#4CAF50"
+                         TextColor="White"
+                         Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}}, Path=BindingContext.OpenReturnCommand}"
                          CommandParameter="{Binding}" />
-                
+
              </Grid>
          </DataTemplate>
      </CollectionView.ItemTemplate>
-
  </CollectionView>
 ```
-#### UsersPage.xaml.cs
+#### TransactionPage.xaml.cs
 ```csharp
-public partial class UsersPage : ContentPage
+public partial class TransactionPage : ContentPage
 {
-    private readonly UsersPageViewModel _viewModel;
-
-    public UsersPage()
+	public TransactionPage()
     {
-        InitializeComponent();
-        _viewModel = new UsersPageViewModel();
-        BindingContext = _viewModel;
-
-        BindingContextChanged += async (s, e) =>
-        {
-            await _viewModel.LoadUsers();
-        };
-    }
-
-    protected override async void OnAppearing()
-    {
-        base.OnAppearing();
-        await _viewModel.LoadUsers();
+		InitializeComponent();
+        BindingContext = new TransactionViewModel();
     }
 }
 ```
-
 ---
 
 # Edit Navigation
 
+Add this to your AppShell.xml
+
 #### AppShell.xaml
 ```xml
-         <!-- HOME TAB -->
+        <!-- TRANSACTIONS TAB -->
         <ShellContent
-        Title="Home"
-        ContentTemplate="{DataTemplate local:MainPage}" 
-        Route="MainPage"/>
-
-        <!-- USER TAB -->
-        <ShellContent
-        Title="Users"
-        ContentTemplate="{DataTemplate local:UsersPage}" 
-        Route="UsersPage"/>
+            Title="Transactions"
+            ContentTemplate="{DataTemplate local:TransactionPage}"
+            Route="TransactionPage" />
 ```
 
 ---
 
 ## 🔗 Navigation
 
-[← Previous (Page 1)](README.md) | [Next → (Page 3)](page3.md)
+[← Previous (Page 1)](page2.md) | [Next → (Page 3)](page4.md)
