@@ -276,4 +276,4 @@ Move the following files in the View Folder:
 
 ## 🔗 Navigation
 
-[Next →](page2.md)
+ [Next → (Users)](page2.md)
