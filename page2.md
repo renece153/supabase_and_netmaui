@@ -567,4 +567,4 @@ public partial class UsersPage : ContentPage
 
 ## 🔗 Navigation
 
-[← Previous (Page 1)](README.md) | [Next → (Page 3)](page3.md)
+[← Previous (SQL Execution)](README.md) | [Next → (Transactions)](page3.md)
