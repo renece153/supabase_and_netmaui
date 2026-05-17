@@ -6,7 +6,7 @@
 ## 📑 Table of Contents
 - [1. Database Schema](#1-database-schema)
 - [2. Stored Procedures](#2-stored-procedures)
-- [3. .NET MAUI ViewModels](#3-net-maui-viewmodels)
+- [3. Organizing your files](#3-organizing-your-files)
 - [4. Borrow Page UI](#4-borrow-page-ui)
 - [5. Picker With Right‑Side Arrow](#5-picker-with-right-side-arrow)
 
@@ -233,16 +233,34 @@ $$;
 
 ---
 
-# 3. .NET MAUI
+# 3. Organizing your files
 ---
 
+Before we proceed, it’s important to organize your .NET MAUI project into a clean folder structure.  
+This keeps your code easy to navigate, easier to maintain, and follows standard MVVM architecture.
 
+Create **four folders** in your project:
 
-Before we proceed, we need to make 4 files for organizational purposes. Create 4 folders:
-1. 
-2.
-3.
-4.
+1. **Models**  
+2. **Services**  
+3. **ViewModels**  
+4. **Views**
+
+### Why this structure matters
+
+- **Models** contain your data objects — the shapes of the information your app works with.  
+- **Services** handle communication with external systems such as Supabase (API calls, SQL functions, etc.).  
+- **ViewModels** contain your UI logic, commands, and data binding for each page.  
+- **Views** are your XAML pages — the screens the user interacts with.
+
+By separating your code into these folders, you follow the MVVM pattern correctly, avoid clutter, and make your project scalable as it grows.
+
+---
+
+# 3. Organizing your files
+
+---
+
 
 ## 3.1 AddInventoryViewModel
 ```csharp
