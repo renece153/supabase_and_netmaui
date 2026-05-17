@@ -7,7 +7,7 @@ Models define the shape of your data and are used by services, viewmodels, and v
 - [1. User Model](#User-Models)
 - [2. User Services](#User-CRUD-Services)
 - [3. View Models](#User-ViewModels)
-- [4. View Models](#ViewModels)
+- [4. View Models](#User-Views)
 
 ---
 ## 📁 Folder Structure Reminder
