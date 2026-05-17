@@ -1247,4 +1247,4 @@ Add this to your AppShell.xml
 
 ## 🔗 Navigation
 
-[← Previous (Users)](page2.md) | [Next → (Page 3)](page4.md)
+[← Previous (Users)](page2.md) | [Next → (Dashbaord)](page4.md)
