@@ -742,6 +742,75 @@ public class ReturnPageViewModel : INotifyPropertyChanged
     }
 }
 ```
+
+## TransactionViewModel.cs
+```csharp
+public class TransactionViewModel : INotifyPropertyChanged
+{
+    private readonly InventoryService _service;
+
+    public ObservableCollection<InventoryAvailability> Inventory { get; set; }
+
+    public Command LoadInventoryCommand { get; }
+    public Command<InventoryAvailability> OpenBorrowCommand { get; }
+    public Command<InventoryAvailability> OpenReturnCommand { get; }
+
+    // ⭐ ADD THIS
+    public Command AddInventoryCommand { get; }
+
+    public TransactionViewModel()
+    {
+        _service = new InventoryService();
+        Inventory = new ObservableCollection<InventoryAvailability>();
+
+        LoadInventoryCommand = new Command(async () => await LoadInventory());
+        OpenBorrowCommand = new Command<InventoryAvailability>(OpenBorrowPage);
+        OpenReturnCommand = new Command<InventoryAvailability>(OpenReturnPage);
+
+        AddInventoryCommand = new Command(async () => await OpenAddInventoryPage());
+
+        LoadInventoryCommand.Execute(null);
+    }
+
+    private async Task LoadInventory()
+    {
+        var items = await _service.GetInventoryAvailabilityAsync();
+        Inventory.Clear();
+
+        foreach (var item in items)
+            Inventory.Add(item);
+    }
+
+    private async void OpenBorrowPage(InventoryAvailability item)
+    {
+        var borrowPage = new BorrowPage(item);
+        await Application.Current.MainPage.Navigation.PushModalAsync(borrowPage);
+
+        // Wait until the modal closes before reloading
+        borrowPage.Disappearing += async (s, e) => await LoadInventory();
+    }
+
+    private async void OpenReturnPage(InventoryAvailability item)
+    {
+        var returnPage = new ReturnPage(item);
+        await Application.Current.MainPage.Navigation.PushModalAsync(returnPage);
+
+        // Wait until the modal closes before reloading
+        returnPage.Disappearing += async (s, e) => await LoadInventory();
+    }
+
+    private async Task OpenAddInventoryPage()
+    {
+        var addPage = new AddInventoryPage();
+        await Application.Current.MainPage.Navigation.PushModalAsync(addPage);
+
+        // Wait until the modal closes before reloading
+        addPage.Disappearing += async (s, e) => await LoadInventory();
+    }
+
+    public event PropertyChangedEventHandler PropertyChanged;
+}
+```
 ---
 
 # Transaction Views
