@@ -271,7 +271,7 @@ Move the following files in the View Folder:
 1. AppShell.xaml
 2. MainPage.xaml
 
-No further action needed.
+
 ---
 
 ## 🔗 Navigation
