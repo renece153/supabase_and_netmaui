@@ -6,8 +6,8 @@ Models define the shape of your data and are used by services, viewmodels, and v
 ## 📑 Table of Contents
 - [1. User Model](#User-Models)
 - [2. User Services](#User-CRUD-Services)
-- [3. View Models](#User-ViewModels)
-- [4. View Models](#User-Views)
+- [3. User View Models](#User-ViewModels)
+- [4. User View](#User-Views)
 - [5. Navigation](#Edit-Navigation)
 
 ---
