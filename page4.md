@@ -3,7 +3,7 @@
 In this section, we will create the **Dashboard Page** that will show the summary.
 
 ## 📑 Table of Contents
-- [1. Set Uo](#Set-Up)
+- [1. Set Up](#Set-Up)
 - [2. Dashboard Model](#Dashboard-Models)
 - [3. Dashboard Services](#Dashboard-Services)
 - [4. Dashboard View Models](#Dashboard-ViewModels)
