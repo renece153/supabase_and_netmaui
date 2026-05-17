@@ -42,7 +42,7 @@ public class InventoryAvailability
 ```
 ---
 
-### InventoryAvailability.cs
+### BorrowedUser.cs
 ```csharp
 public class BorrowedUser
 {
