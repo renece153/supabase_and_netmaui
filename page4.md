@@ -25,16 +25,16 @@ Place all corresponding files in to the appropriate folders.
 ---
 # Set Up
 
-1. Open Tools > NuGet Package Manager > Manage Nuget Packages for Solution...
+### 1. Open Tools > NuGet Package Manager > Manage Nuget Packages for Solution...
 ![Project Nuget](images/project_nuget.png)
 
-2. Click Browse and search for Microcharts.Maui
+### 2. Click Browse and search for Microcharts.Maui
 ![Microcharts MAUI](images/microcharts_maui.png)
 
-3. Install Microcharts
+### 3. Install Microcharts
 ![Install Microcharts](images/install_microcharts.png)
 
-4. Open MauiProgram.cs
+### 4. Open MauiProgram.cs
 #### MauiProgram.cs
 
 ```csharp
@@ -62,7 +62,7 @@ Place all corresponding files in to the appropriate folders.
     }
 ```
 
-5. MainPage.xaml
+### 5. MainPage.xaml
 
 ```xml
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
@@ -72,7 +72,7 @@ Place all corresponding files in to the appropriate folders.
              Title="Main">
 ```
 
-6. SQL Statements to be applied to Supabase
+### 6. SQL Statements to be applied to Supabase
 #### vw_summary_of_inventory
 
 ```sql
