@@ -76,7 +76,7 @@ Place all corresponding files in to the appropriate folders.
 #### vw_summary_of_inventory
 
 ```sql
-create view public.vw_summary_of_inventory as
+create view vw_summary_of_inventory as
 select
   i.name,
   count(b.borrow_id) + count(r.return_id) as total_transactions
@@ -91,7 +91,7 @@ group by
 #### vw_summary_of_transaction
 
 ```sql
-create view public.vw_summary_of_transaction as
+create view vw_summary_of_transaction as
 select
   full_name,
   total_borrows - total_returns as rpending_returns,
