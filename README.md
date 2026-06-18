@@ -25,6 +25,7 @@ create table inventory (
     id uuid primary key default gen_random_uuid(),
     name text,
     quantity int,
+    media_type text null,
     created_at timestamptz default now()
 );
 ```
