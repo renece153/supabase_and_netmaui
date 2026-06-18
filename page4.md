@@ -62,7 +62,6 @@ Place all corresponding files in to the appropriate folders.
     }
 ```
 
-
 5. MainPage.xaml
 
 ```xml
@@ -72,7 +71,6 @@ Place all corresponding files in to the appropriate folders.
              x:Class="Supabase_Connection.Views.MainPage"
              Title="Main">
 ```
-
 
 6. SQL Statements to be appliedto Supabase
 ### vw_summary_of_inventory
