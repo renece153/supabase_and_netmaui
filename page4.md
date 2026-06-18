@@ -36,7 +36,6 @@ Place all corresponding files in to the appropriate folders.
 
 4. Open MauiProgram.cs
 #### MauiProgram.cs
-
 ```csharp
     public static class MauiProgram
     {
@@ -63,7 +62,6 @@ Place all corresponding files in to the appropriate folders.
 ```
 
 5. MainPage.xaml
-
 ```xml
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
@@ -74,7 +72,6 @@ Place all corresponding files in to the appropriate folders.
 
 6. SQL Statements to be appliedto Supabase
 ### vw_summary_of_inventory
-
 ```sql
 create view public.vw_summary_of_inventory as
 select
