@@ -62,6 +62,7 @@ Place all corresponding files in to the appropriate folders.
     }
 ```
 
+
 5. MainPage.xaml
 
 ```xml
@@ -70,8 +71,8 @@ Place all corresponding files in to the appropriate folders.
              xmlns:microcharts="clr-namespace:Microcharts.Maui;assembly=Microcharts.Maui" // Add This
              x:Class="Supabase_Connection.Views.MainPage"
              Title="Main">
-
 ```
+
 
 6. SQL Statements to be appliedto Supabase
 ### vw_summary_of_inventory
@@ -88,6 +89,7 @@ from
 group by
   i.name;
 ```
+
 
 ### vw_summary_of_transaction
 
@@ -113,6 +115,7 @@ from
       u.name
   ) x;
 ```
+
 
 # Dashboard Models
 
