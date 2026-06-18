@@ -70,7 +70,7 @@ Place all corresponding files in to the appropriate folders.
              Title="Main">
 ```
 
-6. SQL Statements to be appliedto Supabase
+6. SQL Statements to be applied to Supabase
 ### vw_summary_of_inventory
 ```sql
 create view public.vw_summary_of_inventory as
